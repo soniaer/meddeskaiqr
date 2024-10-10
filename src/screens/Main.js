@@ -34,7 +34,7 @@ function Main() {
      <div style={{ width: "55%",border:"3px solid #9ea3ac", 
           maxHeight:'40px',height:"100%",
           justifyContent:"center",textAlign:"center",
-          alignItems:"center",color:"#fff",fontSize:"85%",display:"flex",fontWeight:"600",
+          alignItems:"center",color:"#fff",fontSize:"75%",display:"flex",fontWeight:"600",
           overflow:"hidden",
           marginLeft:"21%"}}>
 Barcode / QR Data Viewer</div>
