@@ -75,7 +75,7 @@ Weight
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"20px"
        }}>
-Discription
+Description
        </div>
        </div>
        <div style={{ width: "94%",
