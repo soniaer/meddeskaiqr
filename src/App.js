@@ -2,7 +2,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Main from './screens/Main';
-import NFC from './screens/NFC';
+//import NFC from './screens/NFC';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
       <Routes>
       <Route path="/" element={<Main />} />
-      <Route path="/nfc" element={<NFC />} />
+      {/* <Route path="/nfc" element={<NFC />} /> */}
      
       </Routes>
       </BrowserRouter>
