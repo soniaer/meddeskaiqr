@@ -41,37 +41,37 @@ Barcode / QR Data Viewer</div>
      </div><span style={{fontSize:"70%"}}>It Just works Better</span>
           </div>
         <div style={{alignItems:"center", width: "94%",
-        maxHeight:'350px',height:"100%",marginLeft:"3%",marginTop:"2%",
+        maxHeight:'350px',height:"100%",marginLeft:"3%",marginTop:"1.5%",
         justifyContent:"space-between",display:"flex",
        }}>
          <div style={{alignItems:"center", width: "94%",
         maxHeight:'350px',height:"100%",marginLeft:"0%",marginTop:"0%",
         justifyContent:"space-between",
        }}>
-    <div style={{border:"2px solid #fff", width: "97.5%",
-        maxHeight:'40px',height:"100%",marginLeft:"1%",marginTop:"1%",
+    <div style={{border:"2px solid #fff", width: "100%",
+        maxHeight:'40px',height:"100%",marginLeft:"0%",marginTop:"0%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px",
        
        }}>
 Title
        </div>
-       <div style={{border:"2px solid #fff", width: "97.5%",
-        maxHeight:'40px',height:"100%",marginLeft:"1%",marginTop:"1%",
+       <div style={{border:"2px solid #fff", width: "100%",
+        maxHeight:'40px',height:"100%",marginLeft:"0%",marginTop:"1%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
        }}>
 Manufacture
        </div>
-       <div style={{border:"2px solid #fff", width: "97.5%",
-        maxHeight:'40px',height:"100%",marginLeft:"1%",marginTop:"1%",
+       <div style={{border:"2px solid #fff", width: "100%",
+        maxHeight:'40px',height:"100%",marginLeft:"0%",marginTop:"1%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
        }}>
 Weight
        </div>
-       <div style={{border:"2px solid #fff", width: "97.5%",
-        maxHeight:'200px',height:"100%",marginLeft:"1%",marginTop:"1%",
+       <div style={{border:"2px solid #fff", width: "100%",
+        maxHeight:'212px',height:"100%",marginLeft:"0%",marginTop:"1%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
        }}>
@@ -99,7 +99,7 @@ Product Picture
        </div>
         </div>
         <input id="barcode" type="text" style={{alignItems:"center",border:"2px solid #fff", width: "30%",
-        maxHeight:'40px',height:"100%",marginLeft:"35%",marginTop:"1%",
+        maxHeight:'40px',height:"100%",marginLeft:"35%",marginTop:"1.5%",
         fontSize:"17px",color:"#fff",
         alignSelf:"center",backgroundColor:"transparent",textAlign:"center",
        }} placeholder="Barcode / QR code number"  />
