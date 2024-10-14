@@ -1,8 +1,54 @@
+import { useState } from 'react';
 import '../App.css';
 
 
 
 function Main() {
+ 
+  const [Title,setTitle] = useState("")
+const [Description,setDescription] = useState("")
+const [Weight,setWeight] = useState("")
+const [Manufacture,setManufacture] = useState("")
+const [Barcode_Number,setBarcode_Number] = useState("")
+const [Data_Sheet,setData_Sheet] = useState("")
+const [Product_Image,setProduct_Image] = useState("")
+
+
+const adddata =async() =>{
+  fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/addproduct`,
+  {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "*",
+      "Content-Type": "application/json",
+    },
+body: JSON.stringify({
+  Title:Title,
+  Description:Description,
+  Weight:Weight,
+  Manufacture:Manufacture,
+  Barcode_Number:Barcode_Number,
+  Data_Sheet:Data_Sheet,
+  Product_Image :Product_Image ,
+  DateTime:new Date(),
+}),
+  }
+)
+  .then((response) => {
+ if (!response.ok) {
+      throw new Error(
+        `HTTP error! Status: ${response?.status} ${response?.statusText}`
+      );
+    }
+
+    return response.json();
+  })
+  .then((res) => {
+    console.log(res);
+  });
+}
+
   return (
     <div
       style={{  
@@ -148,49 +194,49 @@ This webpage is been powered by MedDesk-AI all rights received ©
           
           <label>Title:</label>
   
-   <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+   <input value={Title} onChange={(e)=>setTitle(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
    </input>
    </div>
    <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
    <label>Manufacture:</label>
   
-   <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+   <input value={Manufacture} onChange={(e)=>setManufacture(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
    </input>
    </div>
    <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
    <label>Weight:</label>
   
-  <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  <input value={Weight} onChange={(e)=>setWeight(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
   <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
   <label>Description:</label>
   
-  <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  <input value={Description} onChange={(e)=>setDescription(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
   <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
   <label>Barcode:</label>
   
-  <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  <input value={Barcode_Number} onChange={(e)=>setBarcode_Number(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
   <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
   <label>Datasheet:</label>
   
-  <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  <input value={Data_Sheet} onChange={(e)=>setData_Sheet(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
   <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
   <label>Product Picture:</label>
   
-  <input style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  <input value={Product_Image} onChange={(e)=>setProduct_Image(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
 
@@ -201,7 +247,7 @@ This webpage is been powered by MedDesk-AI all rights received ©
   cursor:"pointer"}}>
 
 
-<span style={{color:"white"}} onClick={()=>{document.getElementById("myModal").style.display="none"}}>
+<span style={{color:"white"}} onClick={()=>{adddata();document.getElementById("myModal").style.display="none"}}>
  Add</span>
  </button>
         </div>
