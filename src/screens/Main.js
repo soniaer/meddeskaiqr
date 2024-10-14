@@ -243,11 +243,11 @@ This webpage is been powered by MedDesk-AI all rights received ©
    </div>
    
    </div>
-   <button style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
+   <button onClick={()=>{adddata();document.getElementById("myModal").style.display="none"}} style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
   cursor:"pointer"}}>
 
 
-<span style={{color:"white"}} onClick={()=>{adddata();document.getElementById("myModal").style.display="none"}}>
+<span style={{color:"white"}} >
  Add</span>
  </button>
         </div>
