@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
 
@@ -12,7 +13,7 @@ const [Manufacture,setManufacture] = useState("")
 const [Barcode_Number,setBarcode_Number] = useState("")
 const [Data_Sheet,setData_Sheet] = useState("")
 const [Product_Image,setProduct_Image] = useState("")
-
+const navigate = useNavigate();
 
 const adddata =async() =>{
   fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/addproduct`,
@@ -239,17 +240,24 @@ This webpage is been powered by MedDesk-AI all rights received ©
   <input value={Product_Image} onChange={(e)=>setProduct_Image(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
-
-   </div>
-   
-   </div>
-   <button onClick={()=>{adddata();document.getElementById("myModal").style.display="none"}} style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
-  cursor:"pointer"}}>
+  <div  style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+}}>
+<button onClick={()=>{adddata();document.getElementById("myModal").style.display="none"}} 
+style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
+cursor:"pointer"}}>
 
 
 <span style={{color:"white"}} >
- Add</span>
- </button>
+Add</span>
+</button>
+<button onClick={()=>{navigate("/products")}} style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
+cursor:"pointer",color:"white"
+}}>View</button>
+</div>
+   </div>
+   
+   </div>
+ 
         </div>
       </div>
 </div>
