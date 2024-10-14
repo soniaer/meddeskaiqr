@@ -250,7 +250,7 @@ cursor:"pointer"}}>
 <span style={{color:"white"}} >
 Add</span>
 </button>
-<button onClick={()=>{navigate("/products")}} style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
+<button onClick={()=>{navigate("/view")}} style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
 cursor:"pointer",color:"white"
 }}>View</button>
 </div>
