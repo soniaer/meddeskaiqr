@@ -1,19 +1,19 @@
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Main from './screens/Main';
-//import NFC from './screens/NFC';
+import View from './screens/View';
 
 function App() {
   return (
     <div >
-      <BrowserRouter>
+      <HashRouter>
       <Routes>
       <Route path="/" element={<Main />} />
-      {/* <Route path="/nfc" element={<NFC />} /> */}
+       <Route path="/view" element={<View />} /> 
      
       </Routes>
-      </BrowserRouter>
+      </HashRouter>
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
