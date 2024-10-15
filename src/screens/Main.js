@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
@@ -13,7 +13,91 @@ const [Manufacture,setManufacture] = useState("")
 const [Barcode_Number,setBarcode_Number] = useState("")
 const [Data_Sheet,setData_Sheet] = useState("")
 const [Product_Image,setProduct_Image] = useState("")
+const [scannedData,setScannedData] = useState({
+  "id": "NA",
+  "Title": "NA",
+  "Description": "NA",
+  "Weight": "NA",
+  "Manufacture": "NA",
+  "Barcode_Number": "NA",
+  "Data_Sheet": "NA",
+  "Product_Image": "NA",
+  "DateTime": "NA"
+})
 const navigate = useNavigate();
+
+
+
+useEffect(() => {
+  let buffer = '';
+  let timer = null;
+
+  const handleKeyPress = (event) => {
+    // Ignore any special key presses (like Enter, Shift, etc.)
+    if (event.key.length === 1) {
+      buffer += event.key;
+
+      // Clear buffer if there is a delay in keypress (more than 100ms means manual entry)
+      if (timer) clearTimeout(timer);
+
+      // Set a timeout to check when input has stopped
+      timer = setTimeout(() => {
+        console.log(buffer,"**********SCANNED BARCODE**********")
+        fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/getscannedproducts`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "User-Agent": "*",
+            "Content-Type": "application/json",
+          },
+      body: JSON.stringify({
+        Barcode_Number:buffer,
+      }),
+        }
+      )
+        .then((response) => {
+       if (!response.ok) {
+            throw new Error(
+              `HTTP error! Status: ${response?.status} ${response?.statusText}`
+            );
+          }
+      
+          return response.json();
+        })
+        .then((res) => {
+          console.log(res);
+          if(res?.message === undefined || res?.message === "undefined" || res?.message === null || res?.message === "null" ){
+            setScannedData(res)
+          }else{
+setScannedData({
+  "id": "NA",
+  "Title": "NA",
+  "Description": "NA",
+  "Weight": "NA",
+  "Manufacture": "NA",
+  "Barcode_Number": "NA",
+  "Data_Sheet": "NA",
+  "Product_Image": "NA",
+  "DateTime": "NA"
+})
+          }
+        });
+       
+        buffer = '';  // Clear the buffer after capturing the full barcode
+      }, 100);
+    }
+  };
+
+  // Add event listener for keypress
+  window.addEventListener('keypress', handleKeyPress);
+
+  // Cleanup event listener on component unmount
+  return () => {
+    window.removeEventListener('keypress', handleKeyPress);
+  };
+}, []);
+
 
 const adddata =async() =>{
   fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/addproduct`,
@@ -109,28 +193,30 @@ ADD</div>
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px",
        }}>
-Title
+Title: {scannedData?.Title}
        </div>
        <div style={{border:"2px solid #fff", width: "100%",
         maxHeight:'40px',height:"100%",marginLeft:"0%",marginTop:"1%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
        }}>
-Manufacture
+Manufacture: {scannedData?.Manufacture}
+<div>
+    </div>
        </div>
        <div style={{border:"2px solid #fff", width: "100%",
         maxHeight:'40px',height:"100%",marginLeft:"0%",marginTop:"1%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
        }}>
-Weight
+Weight: {scannedData?.Weight}
        </div>
        <div style={{border:"2px solid #fff", width: "100%",
         maxHeight:'212px',height:"100%",marginLeft:"0%",marginTop:"1%",
         justifyContent:"flex-start", paddingLeft:"1%",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
        }}>
-Description
+Description: {scannedData?.Description}
        </div>
        </div>
        <div style={{ width: "94%",
@@ -143,17 +229,18 @@ Description
         justifyContent:"center",textAlign:"center",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px", overflow:"hidden",
        }}>
-Data Sheet</div>
+Data Sheet: {scannedData?.Data_Sheet}</div>
        </div>
        <div style={{border:"2px solid #fff", width: "94%",
         maxHeight:'350px',height:"100%",marginLeft:"0%",marginTop:"0%",
         justifyContent:"center",textAlign:"center",
-        alignItems:"center",display:"flex",color:"#fff",fontSize:"18px"
+        alignItems:"center",display:"flex",color:"#fff",fontSize:"18px",
+        padding:"1%",
        }}>
-Product Picture
-       </div>
+
+Product Picture: {scannedData?.Product_Image}       </div>
         </div>
-        <input id="barcode" type="text" style={{alignItems:"center",border:"2px solid #fff", width: "30%",
+        <input value={scannedData?.Barcode_Number} id="barcode" type="text" style={{alignItems:"center",border:"2px solid #fff", width: "30%",
         maxHeight:'40px',height:"100%",marginLeft:"35%",marginTop:"1.5%",
         fontSize:"17px",color:"#fff",
         alignSelf:"center",backgroundColor:"transparent",textAlign:"center",
@@ -201,7 +288,7 @@ This webpage is been powered by MedDesk-AI all rights received ©
    <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
    <label>Manufacture:</label>
-  
+ 
    <input value={Manufacture} onChange={(e)=>setManufacture(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
    </input>
    </div>
@@ -236,6 +323,7 @@ This webpage is been powered by MedDesk-AI all rights received ©
   <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
         }}>
   <label>Product Picture:</label>
+
   
   <input value={Product_Image} onChange={(e)=>setProduct_Image(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
