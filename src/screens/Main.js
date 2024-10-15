@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
-
+import jsPDF from "jspdf";
 
 
 function Main() {
@@ -69,6 +69,7 @@ useEffect(() => {
           console.log(res);
           if(res?.message === undefined || res?.message === "undefined" || res?.message === null || res?.message === "null" ){
             setScannedData(res)
+
           }else{
 setScannedData({
   "id": "NA",
@@ -97,6 +98,23 @@ setScannedData({
     window.removeEventListener('keypress', handleKeyPress);
   };
 }, []);
+
+
+const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(12);
+    doc.text("Product Information", 20, 20);
+
+    doc.text(`DateTime: ${scannedData.DateTime}`, 20, 30);
+  doc.text(`Data Sheet: ${scannedData.Data_Sheet}`, 20, 40);
+ 
+  doc.text(`Product Image:`, 20, 50);
+    doc.addImage(scannedData.Product_Image,60,64,80,80)
+
+    // Save the PDF
+    doc.save("ProductData.pdf");
+  };
 
 
 const adddata =async() =>{
@@ -134,6 +152,29 @@ body: JSON.stringify({
   });
 }
 
+
+function sendMessage() {
+    const fileInput = document.getElementById('file-input');
+    const file = fileInput.files[0];
+  console.log(Product_Image,"Product_iamge")
+    if (file) {
+       console.log(file,"file")
+       const reader = new FileReader();
+  
+                  // Once the file is loaded, convert to Base64 and display
+                  reader.onload = function(event) {
+                      const base64String = event.target.result;
+                    console.log(base64String)
+                    setProduct_Image(base64String)
+                  };
+  
+                  // Read the file as a Data URL (Base64)
+                  reader.readAsDataURL(file);
+    }
+    fileInput.value = '';
+  }
+  
+  
   return (
     <div
       style={{  
@@ -228,19 +269,26 @@ Description: {scannedData?.Description}
         maxHeight:'215px',height:"100%",marginLeft:"0%",marginTop:"0%",
         justifyContent:"center",textAlign:"center",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px", overflow:"hidden",
+        flexDirection:"column"
        }}>
-Data Sheet: {scannedData?.Data_Sheet}</div>
+Data Sheet:
+<img alt="" src={require('../img/datasheet.png')} style={{width:"16%",marginTop:"23%"}} />
+<span onClick={()=>generatePDF()} style={{fontSize:"16px",cursor:"pointer"}}>Download
+  </span>
+</div>
        </div>
        <div style={{border:"2px solid #fff", width: "94%",
         maxHeight:'350px',height:"100%",marginLeft:"0%",marginTop:"0%",
         justifyContent:"center",textAlign:"center",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px",
-        padding:"1%",
+        padding:"1%",flexDirection:"column"
        }}>
 
-Product Picture: {scannedData?.Product_Image}       </div>
+Product Picture: 
+<img alt="" src={scannedData?.Product_Image} style={{width:"50%",marginTop:"5%"}} />       </div>
         </div>
-        <input value={scannedData?.Barcode_Number} id="barcode" type="text" style={{alignItems:"center",border:"2px solid #fff", width: "30%",
+        <input disabled value={scannedData?.Barcode_Number} id="barcode" type="text" 
+        style={{alignItems:"center",border:"2px solid #fff", width: "30%",
         maxHeight:'40px',height:"100%",marginLeft:"35%",marginTop:"1.5%",
         fontSize:"17px",color:"#fff",
         alignSelf:"center",backgroundColor:"transparent",textAlign:"center",
@@ -263,10 +311,10 @@ be construed as real data or representative of any actual real medical data .
 
 This webpage is been powered by MedDesk-AI all rights received ©
 </div>
-<div id="myModal" class="modal">
+<div id="myModal" className="modal">
     
-        <div class="modal-content">
-          <span class="close" onClick={()=>{document.getElementById("myModal").style.display="none"}}>&times;</span>
+        <div className="modal-content">
+          <span className="close" onClick={()=>{document.getElementById("myModal").style.display="none"}}>&times;</span>
        
 
          
@@ -325,7 +373,8 @@ This webpage is been powered by MedDesk-AI all rights received ©
   <label>Product Picture:</label>
 
   
-  <input value={Product_Image} onChange={(e)=>setProduct_Image(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  <input  type="file" id="file-input"
+  onChange={(e)=>{sendMessage()}} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
   <div  style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
@@ -357,3 +406,4 @@ cursor:"pointer",color:"white"
 }
 
 export default Main;
+
