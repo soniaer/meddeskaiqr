@@ -102,7 +102,7 @@ setScannedData({
 
 const generatePDF = () => {
   console.log("generatePDF",scannedData.id)
-  if(scannedData.id && scannedData.id!="NA"){
+  if(scannedData.id && scannedData.id!=="NA"){
     const doc = new jsPDF();
     
     doc.setFontSize(12);
