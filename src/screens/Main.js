@@ -101,6 +101,8 @@ setScannedData({
 
 
 const generatePDF = () => {
+  console.log("generatePDF",scannedData.id)
+  if(scannedData.id && scannedData.id!="NA"){
     const doc = new jsPDF();
     
     doc.setFontSize(12);
@@ -114,6 +116,7 @@ const generatePDF = () => {
 
     // Save the PDF
     doc.save("ProductData.pdf");
+  }
   };
 
 
@@ -174,6 +177,8 @@ function sendMessage() {
     fileInput.value = '';
   }
   
+
+ 
   
   return (
     <div
@@ -269,7 +274,7 @@ Description: {scannedData?.Description}
         maxHeight:'215px',height:"100%",marginLeft:"0%",marginTop:"0%",
         justifyContent:"center",textAlign:"center",
         alignItems:"center",display:"flex",color:"#fff",fontSize:"18px", overflow:"hidden",
-        flexDirection:"column"
+        flexDirection:"column",cursor:"pointer"
        }}>
 Data Sheet:
 <img alt="" src={require('../img/datasheet.png')} style={{width:"16%",marginTop:"23%"}} />
@@ -406,4 +411,3 @@ cursor:"pointer",color:"white"
 }
 
 export default Main;
-
