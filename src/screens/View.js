@@ -5,6 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 function View() {
 const [data,setdata] = useState([])
+const [Title,setTitle] = useState("")
+const [Description,setDescription] = useState("")
+const [Weight,setWeight] = useState("")
+const [Manufacture,setManufacture] = useState("")
+const [Barcode_Number,setBarcode_Number] = useState("")
+const [Data_Sheet,setData_Sheet] = useState("")
+const [Product_Image,setProduct_Image] = useState("")
+const [SelectedId,setSelectedId] = useState("")
 
 const navigate = useNavigate();
 
@@ -80,6 +88,43 @@ if (!response.ok) {
 }
 
 
+ const updateitem = async() =>{
+    console.log(SelectedId)
+    fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/updateproducts`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "*",
+        "Content-Type": "application/json",
+      },
+    body: JSON.stringify({
+    id:SelectedId,
+    Title:Title,
+    Description:Description,
+    Weight:Weight,
+    Manufacture:Manufacture,
+    Barcode_Number:Barcode_Number,
+    Data_Sheet:Data_Sheet,
+    Product_Image :Product_Image ,
+    DateTime:new Date(),
+    }),
+    }
+    )
+    .then((response) => {
+    if (!response.ok) {
+        throw new Error(
+          `HTTP error! Status: ${response?.status} ${response?.statusText}`
+        );
+      }
+    
+      return response.json();
+    })
+    .then((res) => {
+      console.log(res);
+    });
+    }
+
 const generatePDF = (scannedData) => {
     const doc = new jsPDF();
     
@@ -102,7 +147,26 @@ const generatePDF = (scannedData) => {
     doc.save("ProductData.pdf");
   };
     
-
+  function sendMessage() {
+    const fileInput = document.getElementById('file-input');
+    const file = fileInput.files[0];
+  console.log(Product_Image,"Product_iamge")
+    if (file) {
+       console.log(file,"file")
+       const reader = new FileReader();
+  
+                  // Once the file is loaded, convert to Base64 and display
+                  reader.onload = function(event) {
+                      const base64String = event.target.result;
+                    console.log(base64String)
+                    setProduct_Image(base64String)
+                  };
+  
+                  // Read the file as a Data URL (Base64)
+                  reader.readAsDataURL(file);
+    }
+    fileInput.value = '';
+  }
 return (
     <div id="main"
     style={{  
@@ -188,6 +252,7 @@ return (
     <th style={{border:"none"}}>BARCODE NUMBER</th>
     <th style={{border:"none"}}>DATA SHEET</th>
     <th style={{border:"none"}}>PRODUCT IMAGE</th>
+    <th style={{border:"none"}}>Edit</th>
     <th style={{border:"none"}}>Delete</th>
     
     
@@ -204,10 +269,14 @@ return (
     <td style={{borderRight:"2px solid #d1d5db",borderTop:"none",}}>{item?.Barcode_Number?.slice(0,10)}...</td>
     <td onClick={()=>generatePDF(item)} style={{borderRight:"2px solid #d1d5db",borderTop:"none",cursor:"pointer"}}>
       <img alt="" src={require("../img/datasheet.png")} 
-    style={{width:"34%",height:"30px"}} /></td>
+    style={{width:"20px",height:"20px"}} /></td>
     <td style={{borderRight:"2px solid #d1d5db",borderTop:"none",}}>{item?.Product_Image?.slice(0,10)}...</td>
+    <td onClick={()=>{setSelectedId(item.id);setTitle(item?.Title);setDescription(item?.Description);setWeight(item?.Weight);setManufacture(item?.Manufacture);
+    setBarcode_Number(item?.Barcode_Number);setData_Sheet(item?.Data_Sheet);setProduct_Image(item?.Product_Image);
+document.getElementById("myModal").style.display="block"}} style={{borderRight:"2px solid #d1d5db",borderTop:"none",cursor:"pointer"}}><img alt="" src={require("../img/pencil.png")} 
+style={{width:"20px",height:"20px"}} /></td>
     <td onClick={()=>deleteid(item?.id)} style={{borderRight:"2px solid #d1d5db",borderTop:"none",cursor:"pointer"}}><img alt="" src={require("../img/delete.png")} 
-    style={{width:"35%",height:"20px"}} /></td>
+    style={{width:"20px",height:"20px"}} /></td>
     </tr>
         )}
     
@@ -241,17 +310,86 @@ return (
     <div style={{fontSize:"16px",marginTop:"1.25%"}}>
     This webpage is been powered by MedDesk-AI all rights received ©
     </div>
-    <div id="myModal" class="modal">
+    <div id="myModal" className="modal">
     
-    <div class="modal-content">
-    <span class="close" onClick={()=>{document.getElementById("myModal").style.display="none"}}>&times;</span>
-    
-    
-    
-    <h4 style={{color:"#156082"}}>Add Data</h4>
-    
+    <div className="modal-content">
+      <span className="close" onClick={()=>{document.getElementById("myModal").style.display="none"}}>&times;</span>
+   
+
+     
+      <h4 style={{color:"#156082"}}>Add Data</h4>
+      <div style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>
+
+     
+      <div style={{width:"80%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    flexDirection:"column"}}>
+      <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+
+      
+      <label>Title:</label>
+
+<input value={Title} onChange={(e)=>setTitle(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+<div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+<label>Manufacture:</label>
+
+<input value={Manufacture} onChange={(e)=>setManufacture(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+<div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+<label>Weight:</label>
+
+<input value={Weight} onChange={(e)=>setWeight(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+<div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+<label>Description:</label>
+
+<input value={Description} onChange={(e)=>setDescription(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+<div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+<label>Barcode:</label>
+
+<input value={Barcode_Number} onChange={(e)=>setBarcode_Number(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+
+<div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+<label>Product Picture:</label>
+
+
+<input  type="file" id="file-input"
+onChange={(e)=>{sendMessage()}} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+<div  style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+}}>
+{/* <button onClick={()=>{updateitem();document.getElementById("myModal").style.display="none"}} 
+style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
+cursor:"pointer"}}>
+
+
+<span style={{color:"white"}} >
+Update</span>
+</button> */}
+<button onClick={()=>{updateitem();document.getElementById("myModal").style.display="none"}}  style={{border:"2px solid #156082",width:"40%",backgroundColor:"#156082",height:"30px",
+cursor:"pointer",color:"white"
+}}>Update</button>
+</div>
+</div>
+
+</div>
+
     </div>
-    </div>
+  </div>
     </div>
     </div>
     </div>
