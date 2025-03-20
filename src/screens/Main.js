@@ -3,9 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import jsPDF from "jspdf";
 
-
 function Main() {
- 
+  const [message, setMessage] = useState("Connect NFC Reader");
+
+  const connectToDevice = async () => {
+    try {
+      console.log("device")
+      const device = await navigator.usb.requestDevice({
+        filters: [{ vendorId: 0x1234 }], // Replace with your NFC reader's vendor ID
+      });
+console.log(device,"device")
+      await device.open();
+      await device.selectConfiguration(1);
+      await device.claimInterface(0);
+
+      setMessage(`Connected to NFC Reader: ${device.productName}`);
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    }
+  };
+
+
+useEffect(()=>{
+  connectToDevice()
+},[])  
   const [Title,setTitle] = useState("")
 const [Description,setDescription] = useState("")
 const [Weight,setWeight] = useState("")
@@ -121,6 +142,7 @@ const generatePDF = () => {
 
 
 const adddata =async() =>{
+  console.log(Data_Sheet)
   fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/addproduct`,
   {
     method: "POST",
@@ -135,7 +157,7 @@ body: JSON.stringify({
   Weight:Weight,
   Manufacture:Manufacture,
   Barcode_Number:Barcode_Number,
-  Data_Sheet:Data_Sheet,
+  Data_Sheet:Data_Sheet,//Array.from(Data_Sheet)
   Product_Image :Product_Image ,
   DateTime:new Date(),
 }),
@@ -152,7 +174,8 @@ body: JSON.stringify({
   })
   .then((res) => {
     console.log(res);
-  });
+  }).catch((error) => console.error("Error:", error));
+
 }
 
 
@@ -177,9 +200,21 @@ function sendMessage() {
     fileInput.value = '';
   }
   
+  function sendMessage2() {
+    const fileInput = document.getElementById("file-input");
+    const file = fileInput.files[0];
 
- 
-  
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file); // Read as binary
+        reader.onload = async () => {
+            const binaryData = new Uint8Array(reader.result); // Convert to Uint8Array
+            setData_Sheet(Array.from(binaryData)); // Convert to JSON-friendly array
+        };
+    }
+    fileInput.value = "";
+}
+
   return (
     <div
       style={{  
@@ -370,7 +405,10 @@ This webpage is been powered by MedDesk-AI all rights received ©
         }}>
   <label>Datasheet:</label>
   
-  <input value={Data_Sheet} onChange={(e)=>setData_Sheet(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  {/* <input value={Data_Sheet} onChange={(e)=>setData_Sheet(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+  </input> */}
+    <input  type="file" id="file-input"
+  onChange={(e)=>{sendMessage2()}} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
   <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
