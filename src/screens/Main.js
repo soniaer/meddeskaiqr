@@ -25,7 +25,9 @@ console.log(device,"device")
 
 
 useEffect(()=>{
-  connectToDevice()
+  
+  connectToDevice();
+  // eslint-disable-next-line 
 },[])  
   const [Title,setTitle] = useState("")
 const [Description,setDescription] = useState("")
