@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
-import jsPDF from "jspdf";
 
 function Main() {
   const [message, setMessage] = useState("Connect NFC Reader");
@@ -115,31 +114,10 @@ setScannedData({
   // Add event listener for keypress
   window.addEventListener('keypress', handleKeyPress);
 
-  // Cleanup event listener on component unmount
   return () => {
     window.removeEventListener('keypress', handleKeyPress);
   };
 }, []);
-
-
-const generatePDF = () => {
-  console.log("generatePDF",scannedData.id)
-  if(scannedData.id && scannedData.id!=="NA"){
-    const doc = new jsPDF();
-    
-    doc.setFontSize(12);
-    doc.text("Product Information", 20, 20);
-
-    doc.text(`DateTime: ${scannedData.DateTime}`, 20, 30);
-  doc.text(`Data Sheet: ${scannedData.Data_Sheet}`, 20, 40);
- 
-  doc.text(`Product Image:`, 20, 50);
-    doc.addImage(scannedData.Product_Image,60,64,80,80)
-
-    // Save the PDF
-    doc.save("ProductData.pdf");
-  }
-  };
 
 
 const adddata =async() =>{
@@ -226,7 +204,7 @@ function sendMessage() {
 
 
   function sendMessage2() {
-    const fileInput = document.getElementById("file-input");
+    const fileInput = document.getElementById("file-input2");
     const file = fileInput.files[0];
 
     if (file) {
@@ -432,7 +410,7 @@ This webpage is been powered by MedDesk-AI all rights received ©
   
   {/* <input value={Data_Sheet} onChange={(e)=>setData_Sheet(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input> */}
-    <input  type="file" id="file-input"
+    <input  type="file" id="file-input2"
   onChange={(e)=>{sendMessage2()}} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
   </input>
   </div>
