@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import jsPDF from "jspdf";
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -91,7 +90,7 @@ if (!response.ok) {
 
 
  const updateitem = async() =>{
-    console.log(SelectedId)
+    console.log(SelectedId,Data_Sheet)
     fetch(`https://meddesknode-f0djang2hcfub6dc.eastus2-01.azurewebsites.net/api/updateproducts`,
     {
       method: "POST",
@@ -124,6 +123,8 @@ if (!response.ok) {
     })
     .then((res) => {
       console.log(res);
+    }).catch((err)=>{
+      console.log(err)
     });
     }
 
@@ -147,29 +148,6 @@ if (!response.ok) {
       // Cleanup
       URL.revokeObjectURL(url);
   };
-
-
-const generatePDF = (scannedData) => {
-    const doc = new jsPDF();
-    
-    doc.setFontSize(12);
-    doc.text("Product Information", 20, 20);
-  
-    // doc.text(`ID: ${scannedData.id}`, 20, 30);
-    // doc.text(`Title: ${scannedData.Title}`, 20, 40);
-    // doc.text(`Description: ${scannedData.Description}`, 20, 50);
-    // doc.text(`Weight: ${scannedData.Weight}`, 20, 60);
-    // doc.text(`Manufacture: ${scannedData.Manufacture}`, 20, 70);
-    // doc.text(`Barcode Number: ${scannedData.Barcode_Number}`, 20, 80);
-    doc.text(`DateTime: ${scannedData.DateTime}`, 20, 30);
-    doc.text(`Data Sheet: ${scannedData.Data_Sheet}`, 20, 40);
-   
-    doc.text(`Product Image:`, 20, 50);
-    doc.addImage(scannedData?.Product_Image,60,64,80,80)
-  
-    // Save the PDF
-    doc.save("ProductData.pdf");
-  };
     
   function sendMessage() {
     const fileInput = document.getElementById('file-input');
@@ -191,6 +169,24 @@ const generatePDF = (scannedData) => {
     }
     fileInput.value = '';
   }
+
+  function sendMessage2() {
+    const fileInput = document.getElementById("file-input2");
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file); // Read as binary
+        reader.onload = async () => {
+            const binaryData = new Uint8Array(reader.result); // Convert to Uint8Array
+            console.log(binaryData)
+            setData_Sheet(Array.from(binaryData)); // Convert to JSON-friendly array
+        };
+    }
+    fileInput.value = "";
+}
+
+
 return (
     <div id="main"
     style={{  
@@ -341,7 +337,7 @@ style={{width:"20px",height:"20px"}} /></td>
    
 
      
-      <h4 style={{color:"#156082"}}>Add Data</h4>
+      <h4 style={{color:"#156082"}}>Update Data</h4>
       <div style={{display:"flex",justifyContent:"center",alignItems:"center",width:"100%"}}>
 
      
@@ -384,7 +380,17 @@ style={{width:"20px",height:"20px"}} /></td>
 <input value={Barcode_Number} onChange={(e)=>setBarcode_Number(e.target.value)} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
 </input>
 </div>
+<div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+    }}>
+<label>DataSheet:</label>
 
+
+<input  type="file" id="file-input2"
+onChange={(e)=>{sendMessage2()}} style={{width:"60%",border:"2px solid #156082",marginBottom:"2%"}}>
+</input>
+</div>
+<div  style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
+}}></div>
 <div style={{width:"100%",paddingTop:"1%",paddingBottom:"1%",color:"#156082",display:"flex",justifyContent:"space-between",
     }}>
 <label>Product Picture:</label>
