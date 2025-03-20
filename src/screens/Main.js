@@ -18,6 +18,7 @@ console.log(device,"device")
       await device.claimInterface(0);
 
       setMessage(`Connected to NFC Reader: ${device.productName}`);
+      console.log(message)
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -200,6 +201,30 @@ function sendMessage() {
     fileInput.value = '';
   }
   
+
+  
+  const downloadPDF = (binaryData) => {
+    // Convert array to Uint8Array
+    const uint8Array = new Uint8Array(binaryData);
+
+    // Create a Blob from the binary data
+    const blob = new Blob([uint8Array], { type: "application/pdf" });
+
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element and trigger download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "document.pdf";
+    document.body.appendChild(a);
+    a.click();
+
+    // Cleanup
+    URL.revokeObjectURL(url);
+};
+
+
   function sendMessage2() {
     const fileInput = document.getElementById("file-input");
     const file = fileInput.files[0];
@@ -313,7 +338,7 @@ Description: {scannedData?.Description}
        }}>
 Data Sheet:
 <img alt="" src={require('../img/datasheet.png')} style={{width:"16%",marginTop:"23%"}} />
-<span onClick={()=>generatePDF()} style={{fontSize:"16px",cursor:"pointer"}}>Download
+<span onClick={()=>downloadPDF(scannedData?.Data_sheet_binary?.data)} style={{fontSize:"16px",cursor:"pointer"}}>Download
   </span>
 </div>
        </div>
