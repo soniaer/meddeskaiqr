@@ -84,6 +84,8 @@ if (!response.ok) {
 })
 .then((res) => {
   console.log(res);
+}).catch((err)=>{
+  console.log(err)
 });
 }
 
@@ -124,6 +126,28 @@ if (!response.ok) {
       console.log(res);
     });
     }
+
+    const downloadPDF = (binaryData) => {
+      // Convert array to Uint8Array
+      const uint8Array = new Uint8Array(binaryData);
+  
+      // Create a Blob from the binary data
+      const blob = new Blob([uint8Array], { type: "application/pdf" });
+  
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+  
+      // Create a link element and trigger download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "document.pdf";
+      document.body.appendChild(a);
+      a.click();
+  
+      // Cleanup
+      URL.revokeObjectURL(url);
+  };
+
 
 const generatePDF = (scannedData) => {
     const doc = new jsPDF();
@@ -267,7 +291,7 @@ return (
     <td style={{borderRight:"2px solid #d1d5db",borderTop:"none"}}>{item?.Weight}</td>
     <td style={{borderRight:"2px solid #d1d5db",borderTop:"none"}}>{item?.Manufacture}</td>
     <td style={{borderRight:"2px solid #d1d5db",borderTop:"none",}}>{item?.Barcode_Number?.slice(0,10)}...</td>
-    <td onClick={()=>generatePDF(item)} style={{borderRight:"2px solid #d1d5db",borderTop:"none",cursor:"pointer"}}>
+    <td onClick={()=>{downloadPDF(item?.Data_sheet_binary?.data)}} style={{borderRight:"2px solid #d1d5db",borderTop:"none",cursor:"pointer"}}>
       <img alt="" src={require("../img/datasheet.png")} 
     style={{width:"20px",height:"20px"}} /></td>
     <td style={{borderRight:"2px solid #d1d5db",borderTop:"none",}}>{item?.Product_Image?.slice(0,10)}...</td>
